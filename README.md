@@ -9,6 +9,7 @@
 -------
 
 * mysql
+* postgres
 
 ## Installation
 
@@ -85,6 +86,7 @@ In order not to specify keys with access to the database, specify them in the .e
 - -dbName=name Database name, required if not specified in .env file
 - -dbUser=user Database user, required if not specified in .env file
 - -dbPassword=password Database password, required if not specified in .env file
+- -dbProvider=postgres Database provider, by default mysql
 
 ## Env variables example
 
@@ -95,4 +97,5 @@ In order not to specify keys with access to the database, specify them in the .e
 DB_NAME=amigo
 DB_USER=user
 DB_PASSWORD=password
+DB_PROVIDER=mysql
 ```
