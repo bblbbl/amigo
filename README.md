@@ -19,7 +19,7 @@
 ```
 1. git clone git@github.com:bblbbl/amigo.git
 
-2. cd amigo/bin/amigo
+2. cd amigo/cmd/amigo
 
 3. go install
 ``` 
