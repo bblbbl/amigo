@@ -7,6 +7,8 @@ import (
 
 func PrepareQuery(query string) string {
 	switch *pkg.DbProvider {
+	case "mariadb":
+		return query
 	case "mysql":
 		return query
 	case "postgres":

@@ -7,15 +7,7 @@ import (
 )
 
 func CreateMigrationTable() {
-	var query string
-	switch *pkg.DbProvider {
-	case "mysql":
-		query = mysqlQuery
-		break
-	case "postgres":
-		query = postgresQuery
-		break
-	}
+	query := queryMap[*pkg.DbProvider]
 
 	connection := pkg.GetConnection()
 
@@ -30,6 +22,12 @@ func CreateMigrationTable() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+var queryMap = map[string]string{
+	"mariadb":  mysqlQuery,
+	"mysql":    mysqlQuery,
+	"postgres": postgresQuery,
 }
 
 var mysqlQuery = `CREATE TABLE IF NOT EXISTS migration (

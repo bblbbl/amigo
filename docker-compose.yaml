@@ -22,3 +22,14 @@ services:
       POSTGRES_DB: ${DB_NAME}
     ports:
       - "5432:5432"
+
+  mariadb:
+    image: mariadb
+    restart: always
+    environment:
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: root
+    ports:
+      - "3808:3808"

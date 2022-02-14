@@ -40,6 +40,8 @@ func GetConnection() *sql.DB {
 	var connection *sql.DB
 
 	switch *DbProvider {
+	case "mariadb":
+		connection = getMysql(user, password, name)
 	case "mysql":
 		connection = getMysql(user, password, name)
 	case "postgres":
