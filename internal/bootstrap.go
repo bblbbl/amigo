@@ -3,7 +3,6 @@ package internal
 import (
 	"amigo/pkg"
 	"database/sql"
-	"log"
 )
 
 func CreateMigrationTable() {
@@ -13,15 +12,11 @@ func CreateMigrationTable() {
 
 	defer func(connection *sql.DB) {
 		err := connection.Close()
-		if err != nil {
-			panic(err)
-		}
+		pkg.Ept(err)
 	}(connection)
 
 	_, err := connection.Exec(query)
-	if err != nil {
-		log.Fatal(err)
-	}
+	pkg.Ept(err)
 }
 
 var queryMap = map[string]string{

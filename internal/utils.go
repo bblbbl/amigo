@@ -4,7 +4,6 @@ import (
 	"amigo/pkg"
 	"database/sql"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -17,9 +16,7 @@ func GetMigrationFiles(migrationDirectory string) []string {
 		files = append(files, path)
 		return nil
 	})
-	if err != nil {
-		panic(err)
-	}
+	pkg.Ept(err)
 
 	return files
 }
@@ -47,23 +44,16 @@ func ExecuteMigration(path string) {
 
 	defer func(connection *sql.DB) {
 		err := connection.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
+		pkg.Ept(err)
 	}(connection)
 
 	rawQuery, err := ioutil.ReadFile(path)
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	pkg.Ept(err)
 
 	queryList := strings.Split(string(rawQuery), ";")
 
 	for _, query := range queryList {
 		_, err = connection.Exec(query)
-		if err != nil {
-			log.Fatal(err)
-		}
+		pkg.Ept(err)
 	}
 }

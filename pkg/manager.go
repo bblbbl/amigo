@@ -6,7 +6,6 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
-	"log"
 	"os"
 	"time"
 )
@@ -62,14 +61,10 @@ func getPostgres(user string, password string, name string, host string, port st
 	)
 
 	db, err := sql.Open("postgres", psqlInfo)
-	if err != nil {
-		log.Fatal(err)
-	}
+	Ept(err)
 
 	err = db.Ping()
-	if err != nil {
-		log.Fatal(err)
-	}
+	Ept(err)
 
 	return db
 }
@@ -83,9 +78,7 @@ func getMysql(user string, password string, name string) *sql.DB {
 	)
 
 	db, err := sql.Open("mysql", connectionString)
-	if err != nil {
-		panic(err)
-	}
+	Ept(err)
 
 	db.SetConnMaxLifetime(time.Minute * 3)
 	db.SetMaxOpenConns(10)

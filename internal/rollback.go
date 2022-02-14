@@ -3,7 +3,6 @@ package internal
 import (
 	"amigo/pkg"
 	"database/sql"
-	"log"
 )
 
 func Rollback(step int, migrationDirectory string) {
@@ -11,9 +10,7 @@ func Rollback(step int, migrationDirectory string) {
 
 	defer func(connection *sql.DB) {
 		err := connection.Close()
-		if err != nil {
-
-		}
+		pkg.Ept(err)
 	}(connection)
 
 	if step == -1 {
@@ -25,9 +22,8 @@ func Rollback(step int, migrationDirectory string) {
 	for resultSet.Next() {
 		var m migration
 		err = resultSet.Scan(&m.Id, &m.Version)
-		if err != nil {
-			log.Fatal(err)
-		}
+		pkg.Ept(err)
+
 		versionList = append(versionList, m.Version)
 	}
 
@@ -58,13 +54,9 @@ func deleteMigration(version string) {
 
 	defer func(connection *sql.DB) {
 		err := connection.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
+		pkg.Ept(err)
 	}(connection)
 
 	_, err := connection.Exec("DELETE FROM migration WHERE version = ?", version)
-	if err != nil {
-		return
-	}
+	pkg.Ept(err)
 }

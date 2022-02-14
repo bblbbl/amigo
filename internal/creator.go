@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"log"
+	"amigo/pkg"
 	"os"
 	"strconv"
 	"time"
@@ -13,10 +13,8 @@ func CreateMigration(path string) {
 
 	f1, err1 := os.Create(path + timeString + "_up.sql")
 	f2, err2 := os.Create(path + timeString + "_down.sql")
-
-	if err1 != nil || err2 != nil {
-		log.Fatal(err1, err2)
-	}
+	pkg.Ept(err1)
+	pkg.Ept(err2)
 
 	_ = f1.Close()
 	_ = f2.Close()

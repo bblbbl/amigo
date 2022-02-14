@@ -3,7 +3,6 @@ package internal
 import (
 	"amigo/pkg"
 	"database/sql"
-	"log"
 )
 
 type migration struct {
@@ -44,23 +43,17 @@ func getExistVersionList() []string {
 
 	defer func(connection *sql.DB) {
 		err := connection.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
+		pkg.Ept(err)
 	}(connection)
 
 	resultSet, err := connection.Query("SELECT id, version FROM migration ORDER BY version")
-	if err != nil {
-		log.Fatal(err)
-	}
+	pkg.Ept(err)
 
 	var result []string
 	for resultSet.Next() {
 		var m migration
 		err = resultSet.Scan(&m.Id, &m.Version)
-		if err != nil {
-			log.Fatal(err)
-		}
+		pkg.Ept(err)
 
 		result = append(result, m.Version)
 	}
@@ -73,15 +66,12 @@ func insertVersion(version string) {
 
 	defer func(connection *sql.DB) {
 		err := connection.Close()
-		if err != nil {
-
-		}
+		pkg.Ept(err)
 	}(connection)
 
 	query := PrepareQuery("INSERT INTO migration (version) VALUES (?)")
 	_, err := connection.Exec(query, version)
 	if err != nil {
-		log.Println("Insert migration err")
-		log.Fatal(err)
+		pkg.Ept(err)
 	}
 }
