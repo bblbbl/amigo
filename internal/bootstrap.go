@@ -6,7 +6,7 @@ import (
 )
 
 func CreateMigrationTable() {
-	query := queryMap[*pkg.DbProvider]
+	query := queryMap[GetDBProvider()]
 
 	connection := pkg.GetConnection()
 

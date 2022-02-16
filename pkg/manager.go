@@ -26,19 +26,21 @@ func GetConnection() *sql.DB {
 		name     = os.Getenv("DB_NAME")
 		port     = os.Getenv("DB_PORT")
 		host     = os.Getenv("DB_HOST")
+		provider = os.Getenv("DB_PROVIDER")
 	)
 
-	if user == "" || password == "" || name == "" || host == "" {
+	if user == "" || password == "" || name == "" || host == "" || provider == "" {
 		user = *dbUser
 		password = *dbPassword
 		name = *dbName
 		port = *dbPort
 		host = *dbHost
+		provider = *DbProvider
 	}
 
 	var connection *sql.DB
 
-	switch *DbProvider {
+	switch provider {
 	case "mariadb":
 		connection = getMysql(user, password, name)
 	case "mysql":

@@ -1,12 +1,11 @@
 package internal
 
 import (
-	"amigo/pkg"
 	"strings"
 )
 
 func PrepareQuery(query string) string {
-	switch *pkg.DbProvider {
+	switch GetDBProvider() {
 	case "mariadb":
 		return query
 	case "mysql":

@@ -57,3 +57,13 @@ func ExecuteMigration(path string) {
 		pkg.Ept(err)
 	}
 }
+
+func GetDBProvider() string {
+	provider := os.Getenv("DB_PROVIDER")
+
+	if provider == "" {
+		provider = *pkg.DbProvider
+	}
+
+	return provider
+}
