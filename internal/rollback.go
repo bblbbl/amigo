@@ -18,6 +18,8 @@ func Rollback(step int, migrationDirectory string) {
 	}
 
 	resultSet, err := connection.Query("SELECT id, version FROM migration ORDER BY version DESC LIMIT ?", step)
+	defer resultSet.Close()
+
 	var versionList []string
 	for resultSet.Next() {
 		var m migration

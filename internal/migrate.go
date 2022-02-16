@@ -49,6 +49,8 @@ func getExistVersionList() []string {
 	resultSet, err := connection.Query("SELECT id, version FROM migration ORDER BY version")
 	pkg.Ept(err)
 
+	defer resultSet.Close()
+
 	var result []string
 	for resultSet.Next() {
 		var m migration
