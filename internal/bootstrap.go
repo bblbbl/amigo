@@ -27,10 +27,12 @@ var queryMap = map[string]string{
 
 var mysqlQuery = `CREATE TABLE IF NOT EXISTS migration (
 					id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    				version VARCHAR(30) NOT NULL 
+    				version VARCHAR(30) NOT NULL, 
+					pack INT NOT NULL
 					)`
 
 var postgresQuery = `CREATE TABLE IF NOT EXISTS migration (
     					id SERIAL PRIMARY KEY,
-    					version VARCHAR(30) NOT NULL 
+    					version VARCHAR(30) NOT NULL,
+						pack INT NOT NULL
     			  	)`

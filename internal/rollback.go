@@ -14,11 +14,15 @@ func Rollback(step int, migrationDirectory string) {
 		pkg.Ept(err)
 	}(connection)
 
+	var resultSet *sql.Rows
+	var err error
+
 	if step == -1 {
-		step = 1
+		resultSet, err = connection.Query("SELECT id, version FROM migration m WHERE pack = (SELECT MAX(pack) FROM migration)")
+	} else {
+		resultSet, err = connection.Query("SELECT id, version FROM migration ORDER BY version DESC LIMIT ?", step)
 	}
 
-	resultSet, err := connection.Query("SELECT id, version FROM migration ORDER BY version DESC LIMIT ?", step)
 	defer resultSet.Close()
 
 	var versionList []string

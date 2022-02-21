@@ -12,6 +12,7 @@ type migration struct {
 }
 
 func Migrate(step int, migrationPath string) {
+	nextMigrationPackNumber := getNextMigrationPackNumber()
 	existVersionList := getExistVersionList()
 	migrationFiles := GetMigrationFiles(migrationPath)
 
@@ -35,7 +36,7 @@ func Migrate(step int, migrationPath string) {
 		if !InArray(version, existVersionList) {
 			log.Warning("Migrating: " + version)
 			ExecuteMigration(path)
-			insertVersion(version)
+			insertVersion(version, nextMigrationPackNumber)
 			counter++
 			appliedMigration++
 			log.Info("Successfully migrated " + version)
@@ -74,7 +75,7 @@ func getExistVersionList() []string {
 	return result
 }
 
-func insertVersion(version string) {
+func insertVersion(version string, packNumber uint) {
 	connection := pkg.GetConnection()
 
 	defer func(connection *sql.DB) {
@@ -82,9 +83,25 @@ func insertVersion(version string) {
 		pkg.Ept(err)
 	}(connection)
 
-	query := PrepareQuery("INSERT INTO migration (version) VALUES (?)")
-	_, err := connection.Exec(query, version)
+	query := PrepareQuery("INSERT INTO migration (version, pack) VALUES (?, ?)")
+	_, err := connection.Exec(query, version, packNumber)
 	if err != nil {
 		pkg.Ept(err)
 	}
+}
+
+func getNextMigrationPackNumber() uint {
+	conn := pkg.GetConnection()
+	defer conn.Close()
+
+	var currentNumber uint
+
+	query := "SELECT MAX(pack) FROM migration"
+
+	err := conn.QueryRow(query).Scan(&currentNumber)
+	if err != nil {
+		return 1
+	}
+
+	return currentNumber + 1
 }
