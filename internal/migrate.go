@@ -3,6 +3,7 @@ package internal
 import (
 	"amigo/pkg"
 	"database/sql"
+	log "github.com/sirupsen/logrus"
 )
 
 type migration struct {
@@ -15,6 +16,7 @@ func Migrate(step int, migrationPath string) {
 	migrationFiles := GetMigrationFiles(migrationPath)
 
 	counter := 0
+	appliedMigration := 0
 	for k, path := range migrationFiles {
 		if counter == step && counter != -1 {
 			break
@@ -31,10 +33,19 @@ func Migrate(step int, migrationPath string) {
 		}
 
 		if !InArray(version, existVersionList) {
+			log.Warning("Migrating: " + version)
 			ExecuteMigration(path)
 			insertVersion(version)
 			counter++
+			appliedMigration++
+			log.Info("Successfully migrated " + version)
 		}
+	}
+
+	if appliedMigration == 0 {
+		log.Warning("Nothing to migrate")
+	} else {
+		log.Infof("Applied %d migrations", appliedMigration)
 	}
 }
 

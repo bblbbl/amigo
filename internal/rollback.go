@@ -3,6 +3,7 @@ package internal
 import (
 	"amigo/pkg"
 	"database/sql"
+	log "github.com/sirupsen/logrus"
 )
 
 func Rollback(step int, migrationDirectory string) {
@@ -31,6 +32,7 @@ func Rollback(step int, migrationDirectory string) {
 
 	migrationFiles := GetMigrationFiles(migrationDirectory)
 
+	rolledBack := 0
 	for _, version := range versionList {
 		for k, path := range migrationFiles {
 			if k == 0 {
@@ -44,10 +46,19 @@ func Rollback(step int, migrationDirectory string) {
 			}
 
 			if version == v {
+				log.Warning("Rolling back: " + version)
 				ExecuteMigration(path)
 				deleteMigration(version)
+				rolledBack++
+				log.Info("Successfully rolled back: " + version)
 			}
 		}
+	}
+
+	if rolledBack == 0 {
+		log.Warn("Nothing to rollback")
+	} else {
+		log.Infof("Rolled back %d versions", rolledBack)
 	}
 }
 
